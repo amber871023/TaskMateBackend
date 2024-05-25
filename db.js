@@ -4,6 +4,6 @@ module.exports = {
     host: "localhost",
     database: "TaskMate",
     user: "root",
-    password: "Taskmate123" // put password here
+    password: "" // put password here
   }
 }
