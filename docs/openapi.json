@@ -136,6 +136,96 @@
         }
       }
     },
+    "/users/tasks/todo": {
+      "get": {
+        "summary": "Get all todo tasks",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "200": {
+            "description": "A list of todo tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/tasks/completed": {
+      "get": {
+        "summary": "Get all completed tasks",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "200": {
+            "description": "A list of completed tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/tasks/date/{date}": {
+      "get": {
+        "summary": "Get tasks by date",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "description": "The date of the tasks to retrieve",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of tasks for the specified date",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/users/tasks/{id}": {
       "get": {
         "summary": "Get a specific task by id",
@@ -258,36 +348,87 @@
           }
         }
       }
+    },
+    "/users/tasks/{id}/completed": {
+      "put": {
+        "summary": "Update a task's completed status",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the task to update",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Task completion status",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "completed": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task completed status updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "UserRegister": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User email"
-          },
           "username": {
-            "type": "string",
-            "description": "User username"
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "description": "User password"
+            "type": "string"
           }
         },
-        "required": ["email", "username", "password"]
+        "required": ["username", "password"]
       },
       "UserRegisterResponse": {
         "type": "object",
         "properties": {
-          "error": {
-            "type": "boolean"
-          },
-          "msg": {
-            "type": "string"
+          "id": {
+            "type": "integer"
           },
           "username": {
             "type": "string"
@@ -297,30 +438,19 @@
       "UserLogin": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User email"
+          "username": {
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "description": "User password"
+            "type": "string"
           }
         },
-        "required": ["email", "password"]
+        "required": ["username", "password"]
       },
       "UserLoginResponse": {
         "type": "object",
         "properties": {
-          "token_type": {
-            "type": "string"
-          },
           "token": {
-            "type": "string"
-          },
-          "expires_in": {
-            "type": "integer"
-          },
-          "username": {
             "type": "string"
           }
         }
@@ -329,29 +459,23 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "description": "The task ID"
+            "type": "integer"
           },
           "title": {
-            "type": "string",
-            "description": "The task title"
+            "type": "string"
           },
-          "color": {
-            "type": "string",
-            "description": "The task color"
-          },
-          "priority": {
-            "type": "string",
-            "description": "The task priority"
+          "description": {
+            "type": "string"
           },
           "completed": {
-            "type": "boolean",
-            "description": "Whether the task is completed"
+            "type": "boolean"
           },
-          "date": {
+          "due_date": {
             "type": "string",
-            "format": "date-time",
-            "description": "The task date"
+            "format": "date"
+          },
+          "priority": {
+            "type": "string"
           }
         }
       },
@@ -359,35 +483,20 @@
         "type": "object",
         "properties": {
           "title": {
-            "type": "string",
-            "description": "The task title"
+            "type": "string"
           },
-          "color": {
+          "description": {
+            "type": "string"
+          },
+          "due_date": {
             "type": "string",
-            "description": "The task color"
+            "format": "date"
           },
           "priority": {
-            "type": "string",
-            "description": "The task priority"
-          },
-          "completed": {
-            "type": "boolean",
-            "description": "Whether the task is completed"
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The task date"
+            "type": "string"
           }
         },
-        "required": ["title", "color", "priority", "completed", "date"]
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "required": ["title"]
       }
     }
   }
