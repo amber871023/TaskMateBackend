@@ -4,6 +4,6 @@ module.exports = {
     host: "localhost",
     database: "TaskMate",
     user: "root",
-    password: "" // put password here
+    password: process.env.DATABASE_PASSWORD  // put password here
   }
 }

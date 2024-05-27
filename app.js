@@ -3,9 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
 
+//db
 const options = require("./db");
 const knex = require("knex")(options)
+
+//swagger
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./docs/openapi.json");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -31,6 +37,8 @@ app.use("/version", (req, res) =>
 );
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 
 
 // catch 404 and forward to error handler

@@ -1,0 +1,394 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "TaskMate API",
+    "description": "This API provides a comprehensive set of features for managing your tasks. You can create, view, edit, and delete tasks, as well as filter and sort them based on various criteria. The API also supports marking tasks as completed and setting their priority.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "n11422807@qut.edu.au"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/users/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "description": "User details for registration",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRegisterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request or user already exists"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "User login",
+        "requestBody": {
+          "description": "User login credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/tasks": {
+      "get": {
+        "summary": "Get all tasks",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "200": {
+            "description": "A list of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new task",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "requestBody": {
+          "description": "Task to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/tasks/{id}": {
+      "get": {
+        "summary": "Get a specific task by id",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the task to retrieve",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a task",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the task to update",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Task details to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a task",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the task to delete",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserRegister": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "username": {
+            "type": "string",
+            "description": "User username"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password"
+          }
+        },
+        "required": ["email", "username", "password"]
+      },
+      "UserRegisterResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "UserLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token_type": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "expires_in": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The task ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "The task title"
+          },
+          "color": {
+            "type": "string",
+            "description": "The task color"
+          },
+          "priority": {
+            "type": "string",
+            "description": "The task priority"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Whether the task is completed"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The task date"
+          }
+        }
+      },
+      "TaskCreation": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The task title"
+          },
+          "color": {
+            "type": "string",
+            "description": "The task color"
+          },
+          "priority": {
+            "type": "string",
+            "description": "The task priority"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Whether the task is completed"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The task date"
+          }
+        },
+        "required": ["title", "color", "priority", "completed", "date"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
