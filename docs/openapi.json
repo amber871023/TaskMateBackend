@@ -415,6 +415,10 @@
       "UserRegister": {
         "type": "object",
         "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
           "username": {
             "type": "string"
           },
@@ -422,15 +426,21 @@
             "type": "string"
           }
         },
-        "required": ["username", "password"]
+        "required": ["email", "username", "password"]
       },
       "UserRegisterResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
+          "error": {
+            "type": "boolean"
+          },
+          "msg": {
+            "type": "string"
           },
           "username": {
+            "type": "string"
+          },
+          "token": {
             "type": "string"
           }
         }
@@ -438,14 +448,15 @@
       "UserLogin": {
         "type": "object",
         "properties": {
-          "username": {
-            "type": "string"
+          "email": {
+            "type": "string",
+            "format": "email"
           },
           "password": {
             "type": "string"
           }
         },
-        "required": ["username", "password"]
+        "required": ["email", "password"]
       },
       "UserLoginResponse": {
         "type": "object",
@@ -464,18 +475,18 @@
           "title": {
             "type": "string"
           },
-          "description": {
+          "color": {
+            "type": "string"
+          },
+          "priority": {
             "type": "string"
           },
           "completed": {
             "type": "boolean"
           },
-          "due_date": {
+          "date": {
             "type": "string",
             "format": "date"
-          },
-          "priority": {
-            "type": "string"
           }
         }
       },
@@ -485,18 +496,21 @@
           "title": {
             "type": "string"
           },
-          "description": {
+          "color": {
             "type": "string"
-          },
-          "due_date": {
-            "type": "string",
-            "format": "date"
           },
           "priority": {
             "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
           }
         },
-        "required": ["title"]
+        "required": ["title", "color", "priority", "date"]
       }
     }
   }
