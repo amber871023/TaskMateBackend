@@ -32,5 +32,5 @@ The API is documented using Swagger for easy reference and usage.
 If you encounter any issues or have suggestions for improvements, please report them on the GitHub issues page: [TaskMate Issues](https://github.com/amber871023/TaskMateBackend/issues) 
 
 ## License
-TaskMate is licensed under the MIT License. See the LICENSE file for more details.
+TaskMate is licensed under the MIT License. See the [LICENSE file](https://github.com/amber871023/TaskMateBackend/blob/main/LICENSE) for more details.
 
