@@ -19,7 +19,7 @@ Contributions to TaskMate are welcome! To contribute, follow these steps:
 ## Dependencies
 To install TaskMate and its dependencies, follow these steps:
 
-1. Clone the repository: git clone https://github.com/your-username/taskmate.git
+1. Clone the repository: git clone [https://github.com/your-username/taskmate.git](https://github.com/amber871023/TaskMateBackend.git)
 2. Navigate to the project directory: cd taskmate
 3. Install dependencies: npm install
 4. npm start or nodemon ./bin/www
